@@ -1,0 +1,31 @@
+version: "3"
+services:
+  mysql:
+    container_name: sysweb_mysql
+    command: --default-authentication-plugin=caching_sha2_password
+    build:
+      context: ./mysql
+    ports:
+      - "3306:3306"
+    volumes:
+      - ./mysql/init:/docker-entrypoint-initdb.d
+    env_file:
+      - ./mysql/env/db.env
+    networks:
+      - sysweb_network
+
+  api:
+    container_name: sysweb_api
+    build:
+      context: ./
+    ports:
+      - "3000:3000"
+    depends_on:
+      - mysql
+    tty: true
+    networks:
+      - sysweb_network
+
+networks:
+  sysweb_network:
+    driver: bridge
