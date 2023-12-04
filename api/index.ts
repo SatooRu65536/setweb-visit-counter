@@ -33,13 +33,22 @@ app.listen(3000, () => {
 });
 
 app.get("/visit", (req: express.Request, res: express.Response) => {
-  const query = "SELECT COUNT(*) AS count FROM visitor";
-  connection.query(query, (err: string, results: []) => {
+  const { host } = req.query;
+
+  if (!host) {
+    res.send({ err: "host is undefined" });
+    return;
+  }
+
+  const insertQuery = `INSERT INTO visitor (path) VALUES (?)`;
+  connection.query(insertQuery, [host]);
+  const selectQuery = "SELECT COUNT(*) AS count FROM visitor WHERE path = ?";
+  connection.query(selectQuery, [host], (err, results) => {
     if (err) {
       console.log(err);
+      res.send({ err: err });
       return;
     }
-
     res.send(results);
   });
 });

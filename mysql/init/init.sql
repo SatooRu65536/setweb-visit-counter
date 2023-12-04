@@ -5,6 +5,6 @@ use sysweb_db;
 CREATE TABLE
   IF NOT EXISTS `visitor` (
     `id` INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    `path` VARCHAR(16) NOT NULL,
-    `date` DATETIME NOT NULL
+    `path` VARCHAR(32) NOT NULL,
+    `date` DATETIME DEFAULT CURRENT_TIMESTAMP
   );
